@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"])
+CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5001"])
 
 SUBJECTS_LIST = [{"id": 1, "name": "Work"}, {"id": 2, "name": "Reading"}]
 NEXT_ID = 3
@@ -32,3 +32,5 @@ def delete_subject(id):
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
+
+    # claude --resume efde01c2-590c-4cf7-a28e-19c097ad853b
