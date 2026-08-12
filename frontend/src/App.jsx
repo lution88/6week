@@ -30,6 +30,13 @@ function App() {
         setSubjects([...subjects, json]);
         setNewSubject("");
     };
+
+    const onDelete = async (subject_id) => {
+        const response = await fetch(`http://127.0.0.1:5001/subjects/${subject_id}`, { method: "DELETE" });
+
+        const result = subjects.filter((subject) => subject.id !== subject_id);
+        setSubjects(result);
+    };
     useEffect(() => {
         getSubjects();
     }, []);
@@ -53,7 +60,12 @@ function App() {
                 <ul>
                     {subjects.map((subject) => (
                         <li key={subject.id}>
-                            <h3>{subject.name}</h3>
+                            <div>
+                                <h3>
+                                    {subject.name}
+                                    <button onClick={() => onDelete(subject.id)}>click me</button>
+                                </h3>
+                            </div>
                         </li>
                     ))}
                 </ul>

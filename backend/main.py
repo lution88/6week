@@ -27,7 +27,7 @@ def add_subject():
 def delete_subject(id):
     global SUBJECTS_LIST
     SUBJECTS_LIST = [sub for sub in SUBJECTS_LIST if sub["id"] != id]
-    return {"success": True}
+    return jsonify(SUBJECTS_LIST)
 
 
 if __name__ == "__main__":
