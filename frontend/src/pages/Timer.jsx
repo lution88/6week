@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
-import "./App.css";
+import "../App.css";
 
-function App() {
+function Timer() {
     const [loading, setLoading] = useState(true);
     const [subjects, setSubjects] = useState([]);
 
@@ -16,7 +16,7 @@ function App() {
         setLoading(false);
     };
 
-    const onSubmit = async (e) => {
+    const onAddSubject = async (e) => {
         e.preventDefault();
         if (newSubject === "") {
             return;
@@ -32,10 +32,14 @@ function App() {
         setNewSubject("");
     };
 
-    const onDelete = async (subject_id) => {
-        const response = await fetch(`http://127.0.0.1:5001/subjects/${subject_id}`, { method: "DELETE" });
+    const onDelete = async (subjectId) => {
+        const response = await fetch(`http://127.0.0.1:5001/subjects/${subjectId}`, { method: "DELETE" });
 
-        const result = subjects.filter((subject) => subject.id !== subject_id);
+        if (!response.ok) {
+            return console.error("response not ok", subjectId);
+        }
+
+        const result = subjects.filter((subject) => subject.id !== subjectId);
         setSubjects(result);
     };
     useEffect(() => {
@@ -44,15 +48,15 @@ function App() {
 
     return (
         <div>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onAddSubject}>
                 <input
                     name="name"
                     value={newSubject}
                     type="text"
-                    placeholder="Write exercise"
+                    placeholder="Write subject"
                     onChange={onChange}
                 ></input>
-                <button>Click</button>
+                <button>추가</button>
             </form>
 
             {loading ? (
@@ -64,7 +68,7 @@ function App() {
                             <div>
                                 <h3>
                                     {subject.name}
-                                    <button onClick={() => onDelete(subject.id)}>click me</button>
+                                    <button onClick={() => onDelete(subject.id)}>삭제</button>
                                 </h3>
                             </div>
                         </li>
@@ -75,4 +79,4 @@ function App() {
     );
 }
 
-export default App;
+export default Timer;
