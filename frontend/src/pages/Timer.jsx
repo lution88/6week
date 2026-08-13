@@ -11,13 +11,17 @@ function Timer() {
 
     const getSubjects = async () => {
         const res = await fetch("http://127.0.0.1:5001/subjects");
+        setLoading(false);
+        if (!res.ok) {
+            return console.error("response not ok getSubjects");
+        }
         const json = await res.json();
         setSubjects(json);
-        setLoading(false);
     };
 
     const onAddSubject = async (e) => {
         e.preventDefault();
+
         if (newSubject === "") {
             return;
         }
@@ -26,6 +30,9 @@ function Timer() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: newSubject }),
         });
+        if (!response.ok) {
+            return console.error("response not ok onAddSubject");
+        }
         const json = await response.json();
 
         setSubjects([...subjects, json]);
@@ -36,7 +43,7 @@ function Timer() {
         const response = await fetch(`http://127.0.0.1:5001/subjects/${subjectId}`, { method: "DELETE" });
 
         if (!response.ok) {
-            return console.error("response not ok", subjectId);
+            return console.error("response not ok onDelete", subjectId);
         }
 
         const result = subjects.filter((subject) => subject.id !== subjectId);
