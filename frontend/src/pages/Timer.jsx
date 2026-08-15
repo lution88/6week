@@ -2,11 +2,16 @@ import { useState, useEffect } from "react";
 
 import "../App.css";
 
+const FOCUS_SECONDS = 1500;
 function Timer() {
     const [loading, setLoading] = useState(true);
     const [subjects, setSubjects] = useState([]);
 
     const [newSubject, setNewSubject] = useState("");
+
+    const [secondsLeft, setSecondsLeft] = useState(FOCUS_SECONDS);
+    const [isRunning, setRunning] = useState(false);
+
     const onChange = (event) => setNewSubject(event.target.value);
 
     const getSubjects = async () => {
@@ -49,9 +54,37 @@ function Timer() {
         const result = subjects.filter((subject) => subject.id !== subjectId);
         setSubjects(result);
     };
+
+    const numToString = (number) => {
+        return String(number).padStart(2, "0");
+    };
+
+    const isRunningToggle = () => {
+        setRunning(!isRunning);
+    };
     useEffect(() => {
         getSubjects();
     }, []);
+
+    const resetAll = () => {
+        setRunning(false);
+        setSecondsLeft(FOCUS_SECONDS);
+    };
+
+    useEffect(() => {
+        if (!isRunning) return;
+        const intervalId = setInterval(() => {
+            setSecondsLeft((prev) => prev - 1);
+        }, 1000);
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [isRunning]);
+
+    useEffect(() => {
+        if (secondsLeft > 0) return;
+        setRunning(false);
+    }, [secondsLeft]);
 
     return (
         <div>
@@ -65,7 +98,13 @@ function Timer() {
                 ></input>
                 <button>추가</button>
             </form>
-
+            <h2>
+                {numToString(Math.floor(secondsLeft / 60))}:{numToString(secondsLeft % 60)}
+                <button onClick={isRunningToggle} disabled={secondsLeft <= 0}>
+                    {isRunning ? `일시정지` : " 시  작 "}
+                </button>
+                <button onClick={resetAll}>RESET</button>
+            </h2>
             {loading ? (
                 <h1>Loading...</h1>
             ) : (
