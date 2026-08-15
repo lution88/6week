@@ -35,32 +35,32 @@
 
 이 프로젝트가 실제로 돌아가고 있는 환경.
 
-| | 버전 |
-| --- | --- |
-| macOS | 26.5.2 (arm64) |
-| Python | 3.10.4 |
-| pip | 22.0.4 |
-| Node | 26.4.0 |
-| npm | 11.17.0 |
+|        | 버전           |
+| ------ | -------------- |
+| macOS  | 26.5.2 (arm64) |
+| Python | 3.10.4         |
+| pip    | 22.0.4         |
+| Node   | 26.4.0         |
+| npm    | 11.17.0        |
 
 ### 백엔드 패키지
 
 `backend/requirements.txt` 참고. 직접 설치한 건 둘뿐이고 나머지는 의존성이다.
 
-| 패키지 | 버전 |
-| --- | --- |
-| Flask | 3.1.3 |
+| 패키지     | 버전  |
+| ---------- | ----- |
+| Flask      | 3.1.3 |
 | flask-cors | 6.0.5 |
 
 ### 프론트엔드 패키지
 
-| 패키지 | 버전 |
-| --- | --- |
-| react / react-dom | 19.2.8 |
-| react-router-dom | 7.18.2 |
-| vite | 8.2.0 |
-| @vitejs/plugin-react | 6.0.4 |
-| eslint | 10.8.0 |
+| 패키지               | 버전   |
+| -------------------- | ------ |
+| react / react-dom    | 19.2.8 |
+| react-router-dom     | 7.18.2 |
+| vite                 | 8.2.0  |
+| @vitejs/plugin-react | 6.0.4  |
+| eslint               | 10.8.0 |
 
 ---
 
@@ -95,10 +95,10 @@ npm run dev
 
 ## 포트
 
-| 포트 | 무엇 | 비고 |
-| --- | --- | --- |
-| 5001 | Flask API | **5000이 아니다.** macOS의 AirPlay Receiver가 5000을 점유하고 있어서 옮겼다 |
-| 5173 | Vite 개발 서버 | Vite 기본값 |
+| 포트 | 무엇           | 비고                                                                        |
+| ---- | -------------- | --------------------------------------------------------------------------- |
+| 5001 | Flask API      | **5000이 아니다.** macOS의 AirPlay Receiver가 5000을 점유하고 있어서 옮겼다 |
+| 5173 | Vite 개발 서버 | Vite 기본값                                                                 |
 
 `main.py` 마지막 줄의 `app.run(debug=True, port=5001)`에서 바꿀 수 있다. 바꾸면 `Timer.jsx`의 URL 세 곳도 같이 고쳐야 한다.
 
@@ -132,10 +132,10 @@ CORS(app, origins=["http://localhost:5173"])
 
 차이가 배포 때 드러난다:
 
-| | CRA | Vite |
-| --- | --- | --- |
-| 빌드 결과 폴더 | `build` | `dist` |
-| 배포 명령 | `gh-pages -d build` | `gh-pages -d dist` |
+|                | CRA                 | Vite               |
+| -------------- | ------------------- | ------------------ |
+| 빌드 결과 폴더 | `build`             | `dist`             |
+| 배포 명령      | `gh-pages -d build` | `gh-pages -d dist` |
 
 GitHub Pages는 저장소 이름이 경로에 붙으므로 `vite.config.js`에 `base` 설정도 필요하다. 아직 안 했다.
 
@@ -143,11 +143,11 @@ GitHub Pages는 저장소 이름이 경로에 붙으므로 `vite.config.js`에 `
 
 ## API
 
-| Method | Endpoint | 동작 |
-| --- | --- | --- |
-| `GET` | `/subjects` | 과목 전체 조회 |
-| `POST` | `/subjects` | 과목 추가 (body: `{"name": "..."}`) |
-| `DELETE` | `/subjects/<int:id>` | 과목 삭제 |
+| Method   | Endpoint             | 동작                                |
+| -------- | -------------------- | ----------------------------------- |
+| `GET`    | `/subjects`          | 과목 전체 조회                      |
+| `POST`   | `/subjects`          | 과목 추가 (body: `{"name": "..."}`) |
+| `DELETE` | `/subjects/<int:id>` | 과목 삭제                           |
 
 `<int:id>`라서 숫자가 아닌 값(`/subjects/2s`)은 404다.
 
