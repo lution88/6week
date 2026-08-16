@@ -12,6 +12,10 @@ function Timer() {
     const [secondsLeft, setSecondsLeft] = useState(FOCUS_SECONDS);
     const [isRunning, setRunning] = useState(false);
 
+    const [selectedId, setSelectedId] = useState(null);
+
+    const selectedSubject = subjects.find((subject) => subject.id === selectedId);
+
     const onChange = (event) => setNewSubject(event.target.value);
 
     const getSubjects = async () => {
@@ -53,6 +57,12 @@ function Timer() {
 
         const result = subjects.filter((subject) => subject.id !== subjectId);
         setSubjects(result);
+
+        if (subjectId === selectedId) setSelectedId(null);
+    };
+
+    const onSelectId = (subjectId) => {
+        setSelectedId(subjectId);
     };
 
     const numToString = (number) => {
@@ -69,6 +79,7 @@ function Timer() {
     const resetAll = () => {
         setRunning(false);
         setSecondsLeft(FOCUS_SECONDS);
+        setSelectedId(null);
     };
 
     useEffect(() => {
@@ -98,13 +109,18 @@ function Timer() {
                 ></input>
                 <button>추가</button>
             </form>
-            <h2>
-                {numToString(Math.floor(secondsLeft / 60))}:{numToString(secondsLeft % 60)}
-                <button onClick={isRunningToggle} disabled={secondsLeft <= 0}>
+            <div>
+                <h2>
+                    {numToString(Math.floor(secondsLeft / 60))}:{numToString(secondsLeft % 60)}
+                </h2>
+                {selectedSubject && <h3>{selectedSubject.name}</h3>}
+                {!selectedId && <p> 과목을 먼저 선택하세요</p>}
+                <button onClick={isRunningToggle} disabled={secondsLeft <= 0 || selectedId === null}>
                     {isRunning ? `일시정지` : " 시  작 "}
                 </button>
                 <button onClick={resetAll}>RESET</button>
-            </h2>
+            </div>
+
             {loading ? (
                 <h1>Loading...</h1>
             ) : (
@@ -112,10 +128,10 @@ function Timer() {
                     {subjects.map((subject) => (
                         <li key={subject.id}>
                             <div>
-                                <h3>
-                                    {subject.name}
-                                    <button onClick={() => onDelete(subject.id)}>삭제</button>
-                                </h3>
+                                <button onClick={() => onSelectId(subject.id)}>
+                                    {subject.id === selectedId ? `▶️ ${subject.name}` : subject.name}
+                                </button>
+                                <button onClick={() => onDelete(subject.id)}>삭제</button>
                             </div>
                         </li>
                     ))}
