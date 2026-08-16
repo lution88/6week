@@ -6,14 +6,10 @@ const FOCUS_SECONDS = 1500;
 function Timer() {
     const [loading, setLoading] = useState(true);
     const [subjects, setSubjects] = useState([]);
-
     const [newSubject, setNewSubject] = useState("");
-
     const [secondsLeft, setSecondsLeft] = useState(FOCUS_SECONDS);
     const [isRunning, setRunning] = useState(false);
-
     const [selectedId, setSelectedId] = useState(null);
-
     const selectedSubject = subjects.find((subject) => subject.id === selectedId);
 
     const onChange = (event) => setNewSubject(event.target.value);
@@ -82,6 +78,17 @@ function Timer() {
         setSelectedId(null);
     };
 
+    const saveSession = async () => {
+        const response = await fetch("http://127.0.0.1:5001/sessions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ subject_id: selectedId, seconds: FOCUS_SECONDS }),
+        });
+        if (!response.ok) {
+            return console.error("response not ok saveSession");
+        }
+    };
+
     useEffect(() => {
         if (!isRunning) return;
         const intervalId = setInterval(() => {
@@ -95,6 +102,7 @@ function Timer() {
     useEffect(() => {
         if (secondsLeft > 0) return;
         setRunning(false);
+        saveSession();
     }, [secondsLeft]);
 
     return (
