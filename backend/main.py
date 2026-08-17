@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(
@@ -61,7 +61,7 @@ def add_session():
         "id": SESSION_COUNT,
         "subject_id": front_data["subject_id"],
         "seconds": front_data["seconds"],
-        "created_at": datetime.now().isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
     }
     SESSIONS_LIST.append(data)
     SESSION_COUNT += 1
