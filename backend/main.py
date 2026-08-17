@@ -3,9 +3,16 @@ from flask_cors import CORS
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"])
+CORS(
+    app,
+    origins=[
+        "http://localhost:5173",
+        "http://localhost:4174",
+        "https://lution88.github.io",
+    ],
+)
 
-SUBJECTS_LIST = [{"id": 1, "name": "Work"}, {"id": 2, "name": "Reading"}]
+SUBJECTS_LIST = []
 NEXT_ID = 3
 
 SESSIONS_LIST = []
@@ -35,8 +42,15 @@ def delete_subject(id):
 
 
 @app.route("/sessions", methods=["GET"])
-def get_session():
-    return jsonify(SESSIONS_LIST)
+def get_sessions():
+    # subjects list
+    name_by_id = {s["id"]: s["name"] for s in SUBJECTS_LIST}
+    # sessions list
+    result = [
+        {**s, "subject_name": name_by_id.get(s["subject_id"], "삭제된 항목")}
+        for s in SESSIONS_LIST
+    ]
+    return jsonify(result)
 
 
 @app.route("/sessions", methods=["POST"])

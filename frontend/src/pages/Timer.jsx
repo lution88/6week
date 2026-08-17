@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 
 import "../App.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const FOCUS_SECONDS = 1500;
+
 function Timer() {
     const [loading, setLoading] = useState(true);
     const [subjects, setSubjects] = useState([]);
@@ -15,7 +17,7 @@ function Timer() {
     const onChange = (event) => setNewSubject(event.target.value);
 
     const getSubjects = async () => {
-        const res = await fetch("http://127.0.0.1:5001/subjects");
+        const res = await fetch(`${API_URL}/subjects`);
         setLoading(false);
         if (!res.ok) {
             return console.error("response not ok getSubjects");
@@ -30,7 +32,7 @@ function Timer() {
         if (newSubject === "") {
             return;
         }
-        const response = await fetch("http://127.0.0.1:5001/subjects", {
+        const response = await fetch(`${API_URL}/subjects`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: newSubject }),
@@ -45,7 +47,7 @@ function Timer() {
     };
 
     const onDelete = async (subjectId) => {
-        const response = await fetch(`http://127.0.0.1:5001/subjects/${subjectId}`, { method: "DELETE" });
+        const response = await fetch(`${API_URL}/subjects/${subjectId}`, { method: "DELETE" });
 
         if (!response.ok) {
             return console.error("response not ok onDelete", subjectId);
@@ -79,7 +81,7 @@ function Timer() {
     };
 
     const saveSession = async () => {
-        const response = await fetch("http://127.0.0.1:5001/sessions", {
+        const response = await fetch(`${API_URL}/sessions`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ subject_id: selectedId, seconds: FOCUS_SECONDS }),
